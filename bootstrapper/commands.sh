@@ -1,0 +1,1 @@
+nix-channel --update && nix-env -iA nixos.nixos-generators; img=$(nixos-generate -f sd-aarch64-installer --system aarch64-linux); cp $img /tmp/shared

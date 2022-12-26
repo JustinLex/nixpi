@@ -1,0 +1,7 @@
+FROM docker.io/nixos/nix:2.12.0
+RUN nix-channel --update
+RUN nix-env -iA nixpkgs.nixos-generators
+RUN nix-env -iA nixpkgs.nano
+COPY builder.nix .
+RUN launcher=$(nixos-generate -f vm-nogui -c builder.nix); mv $launcher /launch-vm.sh
+CMD bash
