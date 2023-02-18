@@ -24,17 +24,12 @@
     ] ++ builtins.split "\n" (builtins.fetchurl https://github.com/JustinLex.keys);
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     htop
   ];
-
-  hardware.steam-hardware.enable = true;
-
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
