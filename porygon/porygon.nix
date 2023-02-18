@@ -24,6 +24,8 @@
     ] ++ builtins.split "\n" (builtins.fetchurl https://github.com/JustinLex.keys);
   };
 
+  # Don't require a password for sudo
+  security.sudo.wheelNeedsPassword = false;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
