@@ -14,14 +14,22 @@
   networking.networkmanager.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jlh = {
+  users.users.jlh =
+
+  # Used for setting SSH authorized keys:
+  # Get file with keys from github, read it as a string, split each line into separate strings, and drop any empty lines
+  let keyList = builtins.split "\n" (builtins.readFile (builtins.fetchurl https://github.com/JustinLex.keys));
+  isNotEmptyString = e: (builtins.isString e) && (builtins.lessThan 0 (builtins.stringLength e));
+  githubKeys = builtins.filter isNotEmptyString keyList;
+
+  in {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
     ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPLVnXALyHX8qQX7gjzdaRbQqR3YMojIY/aMWuohd661 jlh@charmeleon"
-    ] ++ builtins.split "\n" (builtins.fetchurl https://github.com/JustinLex.keys);
+    ] ++ githubKeys;
   };
 
   # Don't require a password for sudo
