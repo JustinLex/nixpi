@@ -39,6 +39,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     htop
+    k3s
   ];
   # List services that you want to enable:
 
@@ -64,12 +65,20 @@
   # Configure k3s
   services.k3s = {
     enable = true;
+    role = "server";
   };
 
-  # Create static pods
-  environment.etc = {
-    "/etc/kubernetes/manifests/pod-hello-world.yaml".source = "/tmp/shared/pod-hello-world.yaml";
-  };
 
+  system.activationScripts =
+  let helloWorldManifest = builtins.path {
+    name = "pod-hello-world-manifest";
+    path = "/tmp/shared/pod-hello-world.yaml";
+  }; # https://discourse.nixos.org/t/write-binary-file-to-nix-store/24732
+  in {
+    install_pod = ''
+    mkdir -p /var/lib/rancher/k3s/server/manifests/
+    cp ${helloWorldManifest} /var/lib/rancher/k3s/server/manifests/
+    '';
+  };
 }
 
